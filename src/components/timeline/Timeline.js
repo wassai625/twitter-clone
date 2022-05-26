@@ -13,7 +13,14 @@ function Timeline() {
       {/* TweetBox */}
         <TweetBox />
       {/* Post */}
-        <Post />
+        <Post 
+        displayName="プログラミング練習"
+        username="harapeko_wassai"
+        verified={true}
+        text="初ツイート"
+        avatar="http://shincode.info/wp-content/uploads/2021/12/icon.png"
+        image="http://source.unsplash.com/random"
+        />
     </div>
   );
 }
