@@ -1,9 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Post from './Post';
 import "./Timeline.css";
 import TweetBox from './TweetBox';
+import db from '../../firebase';
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+
 
 function Timeline() {
+
+  const [posts, setPosts] = useState([]);
+
+  
+
+  useEffect (() => {
+    const postDate = collection(db, "posts");
+    const q = query(postDate, orderBy("timestamp","desc"));
+    // getDocs(q).then((querySnapshot) => {
+    //  setPosts(querySnapshot.docs.map((doc) => doc.data()));
+    // });
+
+    /*リアルタイムデータ取得 */
+    onSnapshot(q, (querySnapshot) => {
+      setPosts(querySnapshot.docs.map((doc) => doc.data()));
+    })
+  }, []);
+
   return (
     <div className='timeline'>
       {/* Header */}
@@ -13,14 +34,19 @@ function Timeline() {
       {/* TweetBox */}
         <TweetBox />
       {/* Post */}
-        <Post 
-        displayName="プログラミング練習"
-        username="harapeko_wassai"
-        verified={true}
-        text="初ツイート"
-        avatar="http://shincode.info/wp-content/uploads/2021/12/icon.png"
-        image="http://source.unsplash.com/random"
-        />
+      
+        {posts.map((post) => (
+         <Post 
+            key={post.text}
+            displayName={post.displayName}
+            username={post.username}
+            verified={post.verified}
+            text={post.text}
+            avatar={post.avatar}
+            image={post.image}
+          />
+        ))};
+      
     </div>
   );
 }
